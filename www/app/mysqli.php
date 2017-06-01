@@ -2,7 +2,6 @@
 final class DB {
 	private $connection;
 	public function __construct($hostname, $username, $password, $database, $port = '3306') {
-		vardump('test1');
 		$this->connection = new \mysqli($hostname, $username, $password, $database, $port);
 		if ($this->connection->connect_error) {
 			throw new \Exception('Error: ' . $this->connection->error . '<br />Error No: ' . $this->connection->errno);
