@@ -51,6 +51,3 @@ final class DB {
 }
 
 $db = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME);//connect to DB
-// $db = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-// vardump($db->query('SELECT * FROM users LIMIT 1'));
-// vardump($db->countAffected());

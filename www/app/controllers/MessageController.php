@@ -1,18 +1,20 @@
 <?php
-// require_once(HOME_PATH.'/app/models/User.php');
+require_once(HOME_PATH.'/app/models/Message.php');
 
 /**
 * init front page
 */
 class MessageController
 {
+	protected $message;
+
+	public function __construct()
+	{
+		$this->message = new Message();
+	}
+
 	public function index()
 	{
-		// vardump(class_exists('User'));
-		// die;
-		// $user = new User();
-		// vardump($user->getUsers());
-		// die;
 		$return_values = [
 			'title' => 'Message Page',
 			'page' => 'message-page.php',
@@ -22,7 +24,16 @@ class MessageController
 			$return_values['login_link'] = self::getFacebookLoginUrl();
 		}
 
+		$return_values['messages'] = $this->message->getMessageList();
+
 		return $return_values;
+	}
+
+	public function create()
+	{
+		$this->message->create($_POST['message']);
+
+		header( 'Location: '.HOME_URL.'/message' );
 	}
 
 	private static function getFacebookLoginUrl()
