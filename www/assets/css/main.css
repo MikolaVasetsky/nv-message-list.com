@@ -1,14 +1,18 @@
-body{
+body {
 	background-color: black;
 	color: white;
 	height: 100vh;
 }
-a{
+a {
 	cursor: pointer;
 }
-.container, .login_container{
+.container, .login_container {
 	height: 100%;
 }
-.login_container a{
+.login_container a {
 	margin: auto;
+}
+.message_need_login {
+	text-align: center;
+	padding-top: 15%;
 }

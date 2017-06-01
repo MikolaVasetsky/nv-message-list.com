@@ -1,30 +1,23 @@
 <?php
+$request_uri = explode('?', $_SERVER['REQUEST_URI']);//remove get params
+$arr = explode("/", substr($request_uri[0], 1));
+@list($controller, $method, $param) = $arr;
 
-$page_info['page'] = '404-page.php';
+if (!$controller) { $controller = 'home'; }
+if (!$method) { $method = 'index'; }
+if (!$param) { $param = []; }
 
-//set default page
-if ( !isset($_SERVER['REDIRECT_URL']) ) {
-	$_SERVER['REDIRECT_URL'] = '/';
-}
+$class = ucfirst(strtolower($controller)).'Controller';
+$file = 'controllers/'.$class.".php";
 
-if ( $_SERVER['REDIRECT_URL'] == '/' ) {
-	if ( $_SESSION['fb_access_token'] ) {
-		header( 'Location: '.HOME_URL.'/message' );
+if ( file_exists(HOME_PATH.'/app/'.$file) ) { // try include file
+	require_once($file);
+	$action = new $class;
+	if ( method_exists($class, $method) ) {
+		$page_params = $action->$method('test');//if method exist -> call to it
+	} else {
+		$page_params = is_not_page();//default 404 page
 	}
-
-	require_once('controllers/HomeController.php');
-	$controller = new HomeController(); // init home controller class for require facebook sdk
-	$page_info = $controller->index(); // get page info from class
-} else if ( $_SERVER['REDIRECT_URL'] == '/message' ) {
-	require_once('controllers/MessageController.php');
-	$controller = new MessageController();
-	$page_info = $controller->index();
-} else if ( $_SERVER['REDIRECT_URL'] == '/login' ) {
-	if ( $_SESSION['fb_access_token'] ) {
-		header( 'Location: '.HOME_URL.'/message' );
-	}
-
-	require_once('controllers/LoginController.php');
 } else {
-	$page_info['page'] = '404-page.php';
+	$page_params = is_not_page();//default 404 page
 }

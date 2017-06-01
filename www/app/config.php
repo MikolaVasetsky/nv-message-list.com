@@ -1,5 +1,10 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 define('HOME_URL', url());
+define('HOME_PATH', dirname(__DIR__) );
 
 //facebook api
 define('F_APP_ID', '120692105176908');

@@ -22,3 +22,10 @@ function vardump($str) {
 	var_dump($str);
 	var_dump('</pre>');
 }
+
+function is_not_page() {
+	return [
+		'title' => '404-page',
+		'page' => '404-page.php',
+	];
+}
