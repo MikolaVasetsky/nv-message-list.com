@@ -1,9 +1,4 @@
 <?php
-define('HOME_URL', url());
-
-define('F_APP_ID', '120692105176908');
-define('F_APP_SECRET', '411734b127fbf0aa895ed765fb12d938');
-
 if(!session_id()) {
 	session_start();
 }

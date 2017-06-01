@@ -1,6 +1,0 @@
-[Wed May 31 23:47:58.376876 2017] [php7:notice] [pid 16405] [client 127.0.0.1:48944] PHP Notice:  Undefined index: REDIRECT_URL in /var/www/nv-message-list.com/www/app/routes.php on line 5
-[Wed May 31 23:47:58.377131 2017] [php7:notice] [pid 16405] [client 127.0.0.1:48944] PHP Notice:  Undefined index: REDIRECT_URL in /var/www/nv-message-list.com/www/app/routes.php on line 5
-[Wed May 31 23:47:58.377148 2017] [php7:notice] [pid 16405] [client 127.0.0.1:48944] PHP Notice:  Undefined index: fb_access_token in /var/www/nv-message-list.com/www/app/routes.php on line 6
-[Wed May 31 23:49:53.416441 2017] [php7:notice] [pid 3712] [client 127.0.0.1:49980] PHP Notice:  Undefined index: fb_access_token in /var/www/nv-message-list.com/www/app/routes.php on line 18, referer: http://nv-message-list.com/
-[Wed May 31 23:57:50.359217 2017] [php7:notice] [pid 19389] [client 127.0.0.1:53972] PHP Notice:  Undefined index: REDIRECT_URL in /var/www/nv-message-list.com/www/app/routes.php on line 5
-[Wed May 31 23:57:50.382098 2017] [php7:notice] [pid 19389] [client 127.0.0.1:53972] PHP Notice:  Undefined index: REDIRECT_URL in /var/www/nv-message-list.com/www/app/routes.php on line 5

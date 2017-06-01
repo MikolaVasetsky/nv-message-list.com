@@ -2,7 +2,12 @@
 
 $page_info['page'] = '404-page.php';
 
-if ( ( $_SERVER['REDIRECT_URL'] == '/' || $_SERVER['REDIRECT_URL'] == null ) ) {
+//set default page
+if ( !isset($_SERVER['REDIRECT_URL']) ) {
+	$_SERVER['REDIRECT_URL'] = '/';
+}
+
+if ( $_SERVER['REDIRECT_URL'] == '/' ) {
 	if ( $_SESSION['fb_access_token'] ) {
 		header( 'Location: '.HOME_URL.'/message' );
 	}
