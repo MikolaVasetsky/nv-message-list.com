@@ -3,16 +3,31 @@ class Message extends Model
 {
 	public function getMessageList()
 	{
-		return $this->db()->query('SELECT id, user_id, message, created_at FROM messages');
+		return $this->db()->query('
+			SELECT m.id, m.user_id, m.message, m.created_at, u.facebook_email AS facebook_email
+			FROM messages m
+			INNER JOIN users u ON m.user_id = u.id
+			ORDER BY m.id
+			DESC
+		');
 	}
 
-	public function create($message)
+	public function getCurrentUser()
 	{
-		$user_id = 1;
+		$result = $this->db()->query('SELECT id, facebook_email FROM users WHERE facebook_token = "'.$_SESSION['fb_access_token'].'"');
+		if ( $result->num_rows > 0 ) {
+			return $result->rows[0];
+		} else {
+			session_destroy();//destroy session and refresh page if session token != token
+			header( 'Location: '.HOME_URL.'/message' );
+		}
+	}
+
+	public function create($message, $user_id)
+	{
 		$message = $this->db()->escape($message);
 
 		return $this->db()->query('INSERT INTO messages ( user_id, message ) VALUES ('.$user_id.', "'.$message.'")');
-		// return back
 	}
 
 	public function update($message, $id)
