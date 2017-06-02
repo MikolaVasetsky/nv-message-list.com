@@ -78,11 +78,16 @@ class LoginController
 			var_dump($accessToken->getValue());
 		}
 
+		$_SESSION['fb_access_token'] = (string) $accessToken;
+
+		// get email
+		$fb->setDefaultAccessToken((string) $accessToken);
+		$response = $fb->get('/me?locale=en_US&fields=email');
+		$userNode = $response->getGraphUser();
+		$facebook_email = $userNode->getField('email');
 
 		$user = new User();
-		$user->createOrUpdateTokenUser($facebook_id, $accessToken);
-
-		$_SESSION['fb_access_token'] = $accessToken;
+		$user->createOrUpdateTokenUser($facebook_id, (string) $accessToken, $facebook_email);
 
 
 		header( 'Location: '.HOME_URL.'/message' );

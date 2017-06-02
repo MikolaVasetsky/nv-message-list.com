@@ -19,11 +19,7 @@
 		<!-- end container for form create new message -->
 
 		<!-- message list -->
-		<div>
-			<?php foreach( $page_params['messages']->rows as $message): ?>
-				<?php vardump($message); ?>
-			<?php endforeach; ?>
-		</div>
+			<?php require_once('partials/message-list.php'); ?>
 		<!-- end message list -->
 	</div>
 <?php else : ?>

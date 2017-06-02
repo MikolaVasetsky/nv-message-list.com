@@ -7,10 +7,15 @@ require_once(HOME_PATH.'/app/models/Message.php');
 class MessageController
 {
 	protected $message;
+	protected $user;
 
 	public function __construct()
 	{
 		$this->message = new Message();
+
+		if ( isset($_SESSION['fb_access_token']) ) { //if user has session, we check his ID.
+			$this->user = $this->message->getCurrentUser();
+		}
 	}
 
 	public function index()
@@ -18,6 +23,7 @@ class MessageController
 		$return_values = [
 			'title' => 'Message Page',
 			'page' => 'message-page.php',
+			'user_id' => $this->user['id']
 		];
 
 		if ( !isset($_SESSION['fb_access_token']) ) {
@@ -31,7 +37,7 @@ class MessageController
 
 	public function create()
 	{
-		$this->message->create($_POST['message']);
+		$this->message->create($_POST['message'], $this->user['id']);
 
 		header( 'Location: '.HOME_URL.'/message' );
 	}

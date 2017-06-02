@@ -16,3 +16,16 @@ a {
 	text-align: center;
 	padding-top: 15%;
 }
+
+/*
+ * message list page
+ */
+.message_list {
+	background-color: #fff;
+	margin-top: 3em;
+	padding: 1.5em;
+	height: 400px;
+	overflow-y: scroll;
+	border-radius: .25rem;
+	color: black;
+}
