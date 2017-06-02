@@ -1,14 +1,17 @@
 <?php
 class Message extends Model
 {
-	public function getMessageList()
+	public function getMessageList($skip = 0)
 	{
+
 		return $this->db()->query('
 			SELECT m.id, m.user_id, m.message, m.created_at, u.facebook_email AS facebook_email
 			FROM messages m
 			INNER JOIN users u ON m.user_id = u.id
 			ORDER BY m.id
 			DESC
+			LIMIT 5
+			OFFSET '.$skip.'
 		');
 	}
 
@@ -39,7 +42,17 @@ class Message extends Model
 
 	public function delete($id)
 	{
-		$this->db()->query('DELETE FROM `messages` WHERE `id` = '.$id);
-		// return back
+		return $this->db()->query('DELETE FROM `messages` WHERE `id` = '.$id);
+		//also delete comment and reply
+	}
+
+	public function getUserId($id)
+	{
+		$result = $this->db()->query('SELECT user_id FROM messages WHERE id = '.$id.'');
+		if ( $result->num_rows > 0 ) {
+			return $result->rows[0]['user_id'];
+		} else {
+			return false;
+		}
 	}
 }

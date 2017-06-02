@@ -42,6 +42,37 @@ class MessageController
 		header( 'Location: '.HOME_URL.'/message' );
 	}
 
+	public function delete()
+	{
+		$id = (int)$_POST['id'];
+		//check user id
+		if ( $this->message->getUserId($id) != $this->user['id'] ) {
+			//reutnr message with error status
+			exit(json_encode(['status' => 'error', 'message' => 'Вы не можете удалить это сообщение']));
+		}
+		//delete message and three comment and reply
+		if ( true != $this->message->delete($id) ) {
+			exit(json_encode(['status' => 'error', 'message' => 'Ошибка при удалении']));
+		}
+
+		exit(json_encode(['status' => 'success', 'message' => 'Сообщение удалено']));
+	}
+
+	public function getAjaxMessages()
+	{
+		$result = $this->message->getMessageList($_POST['skip']);
+		if ( $result->num_rows > 0 ) {
+			exit(json_encode(['status' => 'success', 'data' => json_encode($result->rows)]));
+		} else {
+			exit(json_encode(['status' => 'error', 'message' => 'Список закончен']));
+		}
+	}
+
+
+
+
+
+
 	private static function getFacebookLoginUrl()
 	{
 		require_once('./vendor/autoload.php');
