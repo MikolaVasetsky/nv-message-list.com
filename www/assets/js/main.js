@@ -60,10 +60,14 @@ jQuery(document).ready(function($) {
 	 * Code for message page ajax load next messages
 	 */
 	if ( $('.message_list') ) {
-		let skipRows = 5; // default skip rows from DB
-		let isEnd = false;
-		let currentUserId = $('#current_user_id').val();
-		let win = $('.message_list');
+		// alert('need fix fast scroll user');
+
+		var skipRows = 5; // default skip rows from DB
+		var isEnd = false;
+		var currentUserId = $('#current_user_id').val();
+		var win = $('.message_list');
+
+		var flag = 0; // don't start ajax before end ajax
 
 		// Each time the user scrolls
 		win.scroll(function() {
@@ -72,46 +76,50 @@ jQuery(document).ready(function($) {
 				if ($('.correct_height_message_list').height() - win.height() <= win.scrollTop()) {
 					$('#loading').show();
 
-					$.ajax({
-						url: '/message/getAjaxMessages',
-						type: "POST",
-						data: {
-							skip: skipRows
-						},
-						success: function(response) {
-							skipRows += 5; // add to skip from db
-							let html = '';
-							response = $.parseJSON(response); // get object from json
-							if ( response.status == 'success' ) {
-								let messages = $.parseJSON(response.data);
-								messages.forEach(function(message) { //each data from DB and generate html for append to list
-									html += `
-										<div id="message_`+message.id+`">
-											<div class="mb-2">
-												Написано <a href="mailto:`+message.facebook_email+`">`+message.facebook_email+`</a> в `+message.created_at+`
-												`;
-												if ( message.user_id == currentUserId) { // check if current user can edit this message
-													html += `
-														<div class="float-right">
-															<a href="javascript:void(0)" data-id="`+message.id+`" class="mr-2"><img src="/assets/img/edit.png"></a>
-															<a href="javascript:void(0)" data-id="`+message.id+`" id="delete_message"><img src="/assets/img/delete.png"></a>
-														</div>
+					if ( flag == 0 ) {
+						flag = 1;
+						$.ajax({
+							url: '/message/getAjaxMessages',
+							type: "POST",
+							data: {
+								skip: skipRows
+							},
+							success: function(response) {
+								flag = 0;
+								var html = '';
+								response = $.parseJSON(response); // get object from json
+								if ( response.status == 'success' ) {
+									let messages = $.parseJSON(response.data);
+									skipRows += messages.length; // add to skip from db
+									messages.forEach(function(message) { //each data from DB and generate html for append to list
+										html += `
+											<div id="message_`+message.id+`">
+												<div class="mb-2">
+													Написано <a href="mailto:`+message.facebook_email+`">`+message.facebook_email+`</a> в `+message.created_at+`
 													`;
-												}
-												html += `
+													if ( message.user_id == currentUserId) { // check if current user can edit this message
+														html += `
+															<div class="float-right">
+																<a href="javascript:void(0)" data-id="`+message.id+`" class="mr-2"><img src="/assets/img/edit.png"></a>
+																<a href="javascript:void(0)" data-id="`+message.id+`" id="delete_message"><img src="/assets/img/delete.png"></a>
+															</div>
+														`;
+													}
+													html += `
+												</div>
+												<p class="mark p-2 message_text_id_`+message.id+`">`+message.message+`</p>
+												<hr>
 											</div>
-											<p class="mark p-2">`+message.message+`</p>
-											<hr>
-										</div>
-									`;
-								});
-							} else if ( response.status == 'error' ) {
-								isEnd = true; //set false for not search in DB and don't use ajax
+										`;
+									});
+								} else if ( response.status == 'error' ) {
+									isEnd = true; //set false for not search in DB and don't use ajax
+								}
+								$('#messages').append(html);
+								$('#loading').hide();
 							}
-							$('#messages').append(html);
-							$('#loading').hide();
-						}
-					});
+						});
+					}
 				}
 			}
 		});

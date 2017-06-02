@@ -12,7 +12,7 @@
 							</div>
 						<?php endif; ?>
 					</div>
-					<p class="mark p-2"><?php echo $message['message']; ?></p>
+					<p class="mark p-2 message_text_id_<?php echo $message['id']; ?>"><?php echo $message['message']; ?></p>
 					<hr>
 				</div>
 			<?php endforeach; ?>
