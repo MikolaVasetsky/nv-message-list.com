@@ -19,7 +19,9 @@
 		<!-- end container for form create new message -->
 
 		<!-- message list -->
+		<?php if ( !empty($page_params['messages']->rows) ) : ?>
 			<?php require_once('partials/message-list.php'); ?>
+		<?php endif; ?>
 		<!-- end message list -->
 	</div>
 <?php else : ?>
