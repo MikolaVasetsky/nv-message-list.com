@@ -5,22 +5,25 @@ if (window.location.hash == '#_=_'){
 }
 
 jQuery(document).ready(function($) {
+	alert('need fix scroll functions and look on error list');
+
 	/*
 	 * use ajax for delete message
 	 */
-	$(document).on('click', '#delete_message', function(e) {
+	$(document).on('click', '.delete', function(e) {
 		e.preventDefault();
-		var message_id = $(this).data('id');
+		var id = $(this).data('id');
+		var model = $(this).data('model');
 		$.ajax({
-			url: '/message/delete',
+			url: '/'+model+'/delete',
 			type: "POST",
 			data: {
-				id: message_id
+				id: id
 			},
 			success: function (response) {
 				var response = $.parseJSON(response);
 				if ( response.status == 'success' ) {
-					$('#message_'+message_id).remove();
+					$('#'+model+'_'+id).remove();
 					successMessage(response.message);//show message success
 				} else if ( response.status == 'error' ) {
 					errorMessage(response.message);//show message error
@@ -35,40 +38,42 @@ jQuery(document).ready(function($) {
 	/*
 	 * show modal with message text
 	 */
-	$(document).on('click', '#edit_message', function(e) {
+	$(document).on('click', '.edit', function(e) {
 		e.preventDefault();
-		var message_id = $(this).data('id');
-		var message = $('#message_text_id_'+message_id).html();
+		var id = $(this).data('id');
+		var model = $(this).data('model');
+		var text = $('#'+model+'_text_id_'+id).html();
 
-		$('#edit_message_id').val(message_id);//set message id for edit save message
-		$('#edit_message_text').val(message);//set message to text area
+		$('#edit_id').val(id);//set edit id
+		$('#edit_model').val(model);//set edit model
+		$('#edit_text').val(text);//set edit text
 	});
 
 	/*
 	 * save edit message
 	 */
-	$(document).on('click', '#save_edit_message', function(e) {
+	$(document).on('click', '#save_edit', function(e) {
 		e.preventDefault();
-		var message_id = $('#edit_message_id').val();
-		var message = $('#edit_message_text').val();
-
+		var id = $('#edit_id').val();
+		var text = $('#edit_text').val();
+		var model = $('#edit_model').val();
 
 		$.ajax({
-			url: '/message/update',
+			url: '/'+model+'/update',
 			type: "POST",
 			data: {
-				id: message_id,
-				message: message
+				id: id,
+				text: text
 			},
 			success: function (response) {
 				var response = $.parseJSON(response);
 				if ( response.status == 'success' ) {
-					$('#message_updated_at_'+message_id + ' span').html(response.updated_at);//update message last update
-					$('#message_updated_at_'+message_id).removeClass('d-none');
-					$('#message_text_id_'+message_id).html(message);//update message text
-					successMessage(response.message);//show message success
+					$('#'+model+'_updated_at_'+id + ' span').html(response.updated_at);//update edit last update
+					$('#'+model+'_updated_at_'+id).removeClass('d-none');
+					$('#'+model+'_text_id_'+id).html(text);//update edit text
+					successMessage(response.message);//show edit success
 				} else if ( response.status == 'error' ) {
-					errorMessage(response.message);//show message error
+					errorMessage(response.message);//show edit error
 				}
 			},
 			error: function (error) {
@@ -76,9 +81,6 @@ jQuery(document).ready(function($) {
 			}
 		});
 
-
-		console.log(message_id);
-		console.log(message);
 	});
 
 	function successMessage(message) {

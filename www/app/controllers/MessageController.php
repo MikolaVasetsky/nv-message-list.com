@@ -1,5 +1,7 @@
 <?php
 require_once(HOME_PATH.'/app/models/Message.php');
+require_once(HOME_PATH.'/app/models/Comment.php');
+require_once(HOME_PATH.'/app/models/Reply.php');
 
 /**
 * init front page
@@ -14,7 +16,7 @@ class MessageController
 		$this->message = new Message();
 
 		if ( isset($_SESSION['fb_access_token']) ) { //if user has session, we check his ID.
-			$this->user = $this->message->getCurrentUser();
+			$this->user = $this->message->user();
 		}
 	}
 
@@ -31,6 +33,16 @@ class MessageController
 		}
 
 		$return_values['messages'] = $this->message->getMessageList();
+
+		$comment = new Comment;
+		$reply = new Reply;
+		for ( $i = 0; $i < $return_values['messages']->num_rows; ++$i ) {
+			$return_values['messages']->rows[$i]['comments'] = $comment->getComments($return_values['messages']->rows[$i]['id']);//get comment for message
+
+			for ( $j = 0; $j < $return_values['messages']->rows[$i]['comments']->num_rows; ++$j ) {
+				$return_values['messages']->rows[$i]['comments']->rows[$j]['replys'] = $reply->getReplys($return_values['messages']->rows[$i]['comments']->rows[$j]['id']);//get reply for message
+			}
+		}
 
 		return $return_values;
 	}
@@ -51,7 +63,7 @@ class MessageController
 			exit(json_encode(['status' => 'error', 'message' => 'Вы не можете редактировать это сообщение']));
 		}
 
-		if ( !$updated_at = $this->message->update($id, $_POST['message']) ) {
+		if ( !$updated_at = $this->message->update($id, $_POST['text']) ) {
 			exit(json_encode(['status' => 'error', 'message' => 'Ошибка при редактировании']));
 		}
 

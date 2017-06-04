@@ -12,12 +12,51 @@
 
 						<?php if ($message['user_id'] == $page_params['user_id']) :?>
 							<div class="float-right">
-								<a href="javascript:void(0)" data-id="<?php echo $message['id']; ?>" id="edit_message" class="mr-2" data-toggle="modal" data-target="#modal_edit_message"><img src="/assets/img/edit.png"></a>
-								<a href="javascript:void(0)" data-id="<?php echo $message['id']; ?>" id="delete_message"><img src="/assets/img/delete.png"></a>
+								<a href="javascript:void(0)" data-id="<?php echo $message['id']; ?>" data-model="message" class="mr-2 edit" data-toggle="modal" data-target="#modal_edit"><img src="/assets/img/edit.png"></a>
+								<a href="javascript:void(0)" data-id="<?php echo $message['id']; ?>" data-model="message" class="delete" ><img src="/assets/img/delete.png"></a>
 							</div>
 						<?php endif; ?>
 					</div>
-					<p class="mark p-2" id="message_text_id_<?php echo $message['id']; ?>"><?php echo $message['message']; ?></p>
+
+					<div class="d-flex align-items-center">
+						<?php if ( $message['comments']->num_rows > 0 ) : ?>
+							<div class="mr-2 show_reply collapsed" data-toggle="collapse" href="#comment_collapse<?php echo $message['id']; ?>" aria-expanded="false" aria-controls="comment_collapse<?php echo $message['id']; ?>"></div>
+						<?php endif; ?>
+						<p class="mark p-2 m-0 w-100" id="message_text_id_<?php echo $message['id']; ?>"><?php echo $message['message']; ?></p>
+					</div>
+
+
+					<?php if ( isset($page_params['user_id']) ) : ?>
+						<p class="text-right mt-3">
+							<a class="btn btn-primary" data-toggle="collapse" href="#collapseExample_<?php echo $message['id']; ?>" aria-expanded="false" aria-controls="collapseExample_<?php echo $message['id']; ?>">
+								Комментировать
+							</a>
+						</p>
+
+						<div class="collapse mb-3" id="collapseExample_<?php echo $message['id']; ?>">
+							<form action="<?php echo HOME_URL; ?>/comment/create" method="POST" role="form">
+								<legend>Введите комментарий</legend>
+								<div class="row">
+									<div class="col-md-10">
+										<div class="form-group m-md-0">
+											<textarea name="comment" class="form-control" rows="3" required="required" placeholder="Текст комментария"></textarea>
+										</div>
+									</div>
+									<div class="col-md-2 d-flex align-items-center">
+										<input type="hidden" name="message_id" value="<?php echo $message['id']; ?>">
+										<button type="submit" class="btn btn-primary">Отправить</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					<?php endif; ?>
+
+					<?php
+						if ( $message['comments']->num_rows > 0 ) {
+							include('comment-list.php');
+						}
+					?>
+
 					<hr>
 				</div>
 			<?php endforeach; ?>
@@ -38,28 +77,3 @@
 </div>
 
 <input type="hidden" value="<?php echo $page_params['user_id']; ?>" id="current_user_id">
-
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="modal_edit_message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Редактировать</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<textarea name="edit_message_text" class="form-control" rows="3" required="required" placeholder="Текст сообщения" id="edit_message_text"></textarea>
-			</div>
-			<div class="modal-footer">
-				<input type="hidden" name="edit_message_id" id="edit_message_id">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-				<button type="button" class="btn btn-primary" id="save_edit_message" data-dismiss="modal">Сохранить</button>
-			</div>
-		</div>
-	</div>
-</div>

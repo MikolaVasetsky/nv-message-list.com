@@ -15,17 +15,6 @@ class Message extends Model
 		');
 	}
 
-	public function getCurrentUser()
-	{
-		$result = $this->db()->query('SELECT id, facebook_email FROM users WHERE facebook_token = "'.$_SESSION['fb_access_token'].'"');
-		if ( $result->num_rows > 0 ) {
-			return $result->rows[0];
-		} else {
-			session_destroy();//destroy session and refresh page if session token != token
-			header( 'Location: '.HOME_URL.'/message' );
-		}
-	}
-
 	public function create($message, $user_id)
 	{
 		$message = $this->db()->escape($message);
@@ -47,8 +36,13 @@ class Message extends Model
 
 	public function delete($id)
 	{
-		return $this->db()->query('DELETE FROM `messages` WHERE `id` = '.$id);
-		//also delete comment and reply
+		return $this->db()->query('
+			DELETE m, c, r
+			FROM messages m
+			LEFT JOIN comments c ON m.id = c.message_id
+			LEFT JOIN replys r ON c.id = r.comment_id
+			WHERE m.id = '.$id
+		);
 	}
 
 	public function getUserId($id)

@@ -10,8 +10,6 @@
 </head>
 <body>
 
-
-
 	<div class="container">
 		<?php require_once(HOME_PATH.'/views/'.$page_params['page']); ?>
 	</div>
@@ -20,6 +18,5 @@
 	<script type="text/javascript" src="/assets/js/tether.min.js"></script>
 	<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/assets/js/main.js"></script>
-
 </body>
 </html>
