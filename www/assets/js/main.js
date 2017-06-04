@@ -32,6 +32,55 @@ jQuery(document).ready(function($) {
 		});
 	});
 
+	/*
+	 * show modal with message text
+	 */
+	$(document).on('click', '#edit_message', function(e) {
+		e.preventDefault();
+		var message_id = $(this).data('id');
+		var message = $('#message_text_id_'+message_id).html();
+
+		$('#edit_message_id').val(message_id);//set message id for edit save message
+		$('#edit_message_text').val(message);//set message to text area
+	});
+
+	/*
+	 * save edit message
+	 */
+	$(document).on('click', '#save_edit_message', function(e) {
+		e.preventDefault();
+		var message_id = $('#edit_message_id').val();
+		var message = $('#edit_message_text').val();
+
+
+		$.ajax({
+			url: '/message/update',
+			type: "POST",
+			data: {
+				id: message_id,
+				message: message
+			},
+			success: function (response) {
+				var response = $.parseJSON(response);
+				if ( response.status == 'success' ) {
+					$('#message_updated_at_'+message_id + ' span').html(response.updated_at);//update message last update
+					$('#message_updated_at_'+message_id).removeClass('d-none');
+					$('#message_text_id_'+message_id).html(message);//update message text
+					successMessage(response.message);//show message success
+				} else if ( response.status == 'error' ) {
+					errorMessage(response.message);//show message error
+				}
+			},
+			error: function (error) {
+				errorMessage(error);
+			}
+		});
+
+
+		console.log(message_id);
+		console.log(message);
+	});
+
 	function successMessage(message) {
 		var html = `
 			<div class="alert alert-success alert-dismissible fade show action_message" role="alert">
@@ -86,36 +135,14 @@ jQuery(document).ready(function($) {
 							},
 							success: function(response) {
 								flag = 0;
-								var html = '';
 								response = $.parseJSON(response); // get object from json
 								if ( response.status == 'success' ) {
 									let messages = $.parseJSON(response.data);
 									skipRows += messages.length; // add to skip from db
-									messages.forEach(function(message) { //each data from DB and generate html for append to list
-										html += `
-											<div id="message_`+message.id+`">
-												<div class="mb-2">
-													Написано <a href="mailto:`+message.facebook_email+`">`+message.facebook_email+`</a> в `+message.created_at+`
-													`;
-													if ( message.user_id == currentUserId) { // check if current user can edit this message
-														html += `
-															<div class="float-right">
-																<a href="javascript:void(0)" data-id="`+message.id+`" class="mr-2"><img src="/assets/img/edit.png"></a>
-																<a href="javascript:void(0)" data-id="`+message.id+`" id="delete_message"><img src="/assets/img/delete.png"></a>
-															</div>
-														`;
-													}
-													html += `
-												</div>
-												<p class="mark p-2 message_text_id_`+message.id+`">`+message.message+`</p>
-												<hr>
-											</div>
-										`;
-									});
+									setScrollMessage(messages, currentUserId); // if status success i add messages
 								} else if ( response.status == 'error' ) {
 									isEnd = true; //set false for not search in DB and don't use ajax
 								}
-								$('#messages').append(html);
 								$('#loading').hide();
 							}
 						});
@@ -123,5 +150,36 @@ jQuery(document).ready(function($) {
 				}
 			}
 		});
+	}
+
+	function setScrollMessage(messages, currentUserId) {
+		var html = '';
+		messages.forEach(function(message) { //each data from DB and generate html for append to list
+			var classAdd = ( message.created_at == message.updated_at ) ? classAdd = 'd-none' : '';
+
+			html += `
+				<div id="message_`+message.id+`">
+					<div class="mb-2">
+						<span>Написано </span>
+						<a href="mailto:`+message.facebook_email+`">`+message.facebook_email+`</a>
+						<span>в `+message.created_at+`</span>
+						<span class="text-muted ${classAdd}" id="message_updated_at_`+message.id+`"> изменено <span>`+message.updated_at+`</span></span>
+						`;
+						if ( message.user_id == currentUserId) { // check if current user can edit this message
+							html += `
+								<div class="float-right">
+									<a href="javascript:void(0)" data-id="`+message.id+`" id="edit_message" class="mr-2" data-toggle="modal" data-target="#modal_edit_message"><img src="/assets/img/edit.png"></a>
+									<a href="javascript:void(0)" data-id="`+message.id+`" id="delete_message"><img src="/assets/img/delete.png"></a>
+								</div>
+							`;
+						}
+						html += `
+					</div>
+					<p class="mark p-2" id="message_text_id_`+message.id+`">`+message.message+`</p>
+					<hr>
+				</div>
+			`;
+		});
+		$('#messages').append(html);
 	}
 });

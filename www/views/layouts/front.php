@@ -13,7 +13,7 @@
 
 
 	<div class="container">
-		<?php require_once('./views/'.$page_params['page']); ?>
+		<?php require_once(HOME_PATH.'/views/'.$page_params['page']); ?>
 	</div>
 
 	<script type="text/javascript" src="/assets/js/jquery-3.2.1.min.js"></script>

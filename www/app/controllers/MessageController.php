@@ -42,6 +42,22 @@ class MessageController
 		header( 'Location: '.HOME_URL.'/message' );
 	}
 
+	public function update()
+	{
+		$id = (int)$_POST['id'];
+		//check user id
+		if ( $this->message->getUserId($id) != $this->user['id'] ) {
+			//reutnr message with error status
+			exit(json_encode(['status' => 'error', 'message' => 'Вы не можете редактировать это сообщение']));
+		}
+
+		if ( !$updated_at = $this->message->update($id, $_POST['message']) ) {
+			exit(json_encode(['status' => 'error', 'message' => 'Ошибка при редактировании']));
+		}
+
+		exit(json_encode(['status' => 'success', 'message' => 'Сообщение изменено', 'updated_at' => $updated_at]));
+	}
+
 	public function delete()
 	{
 		$id = (int)$_POST['id'];

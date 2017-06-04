@@ -5,7 +5,7 @@ class Message extends Model
 	{
 
 		return $this->db()->query('
-			SELECT m.id, m.user_id, m.message, m.created_at, u.facebook_email AS facebook_email
+			SELECT m.id, m.user_id, m.message, m.created_at, m.updated_at, u.facebook_email AS facebook_email
 			FROM messages m
 			INNER JOIN users u ON m.user_id = u.id
 			ORDER BY m.id
@@ -33,11 +33,16 @@ class Message extends Model
 		return $this->db()->query('INSERT INTO messages ( user_id, message ) VALUES ('.$user_id.', "'.$message.'")');
 	}
 
-	public function update($message, $id)
+	public function update($id, $message)
 	{
 		$message = $this->db()->escape($message);
-		$this->db()->query('UPDATE messages SET message = "'.$message.'", updated_at = "'.date('Y-m-d H:i:s').'" WHERE id = "'.$id.'"');
-		// return back
+		$updated_at = date('Y-m-d H:i:s');
+
+		if ( true === $this->db()->query('UPDATE messages SET message = "'.$message.'", updated_at = "'.$updated_at.'" WHERE id = "'.$id.'"') ) {
+			return $updated_at;
+		} else {
+			return false;
+		}
 	}
 
 	public function delete($id)

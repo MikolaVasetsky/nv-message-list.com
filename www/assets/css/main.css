@@ -37,12 +37,16 @@ a {
 	height: 50px;
 }
 
+#modal_edit_message {
+  color: black;
+}
 
 
 
 
-
-
+/**
+ * preloader
+ */
 .cs-loader-inner {
   transform: translateY(-50%);
   bottom: 1%;

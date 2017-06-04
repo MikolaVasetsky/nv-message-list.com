@@ -1,4 +1,4 @@
-<?php if ( isset($_SESSION['fb_access_token']) ) : ?>
+<?php if ( isset($page_params['user_id']) ) : ?>
 	<div class="container_message">
 		<!-- container for form create new message -->
 		<div class="pt-5">
