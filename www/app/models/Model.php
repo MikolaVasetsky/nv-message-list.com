@@ -3,8 +3,7 @@ class Model
 {
 	public function db()
 	{
-		global $db;
-		return $db;
+		return new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME);//connect to DB
 	}
 
 	public function user()

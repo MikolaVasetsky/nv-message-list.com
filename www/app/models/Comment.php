@@ -32,12 +32,7 @@ class Comment extends Model
 
 	public function delete($id)
 	{
-		return $this->db()->query('
-			DELETE c, r
-			FROM comments c
-			LEFT JOIN replys r ON c.id = r.comment_id
-			WHERE c.id = '.$id
-		);
+		return $this->db()->query('DELETE FROM comments WHERE id = '.$id);
 	}
 
 	public function getUserId($id)

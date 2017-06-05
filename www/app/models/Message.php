@@ -36,13 +36,7 @@ class Message extends Model
 
 	public function delete($id)
 	{
-		return $this->db()->query('
-			DELETE m, c, r
-			FROM messages m
-			LEFT JOIN comments c ON m.id = c.message_id
-			LEFT JOIN replys r ON c.id = r.comment_id
-			WHERE m.id = '.$id
-		);
+		return $this->db()->query('DELETE FROM messages WHERE id = '.$id);
 	}
 
 	public function getUserId($id)

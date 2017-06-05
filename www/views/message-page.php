@@ -26,7 +26,23 @@
 
 		<!-- message list -->
 		<?php if ( !empty($page_params['messages']->rows) ) : ?>
-			<?php require_once('partials/message-list.php'); ?>
+			<div class="message_list">
+				<div class="correct_height_message_list">
+					<div id="messages">
+						<div id="loading" class="cs-loader">
+							<div class="cs-loader-inner">
+								<label>	●</label>
+								<label>	●</label>
+								<label>	●</label>
+								<label>	●</label>
+								<label>	●</label>
+								<label>	●</label>
+							</div>
+						</div>
+						<?php require_once('partials/message-list.php'); ?>
+					</div>
+				</div>
+			</div>
 			<?php require_once('partials/edit-modal.php'); ?>
 		<?php endif; ?>
 		<!-- end message list -->

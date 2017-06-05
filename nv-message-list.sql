@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost:3306
--- Время создания: Июн 04 2017 г., 19:09
+-- Время создания: Июн 05 2017 г., 21:32
 -- Версия сервера: 5.7.18-0ubuntu0.17.04.1
 -- Версия PHP: 7.1.5-1+deb.sury.org~zesty+2
 
@@ -86,7 +86,8 @@ CREATE TABLE `users` (
 -- Индексы таблицы `comments`
 --
 ALTER TABLE `comments`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `message_id` (`message_id`);
 
 --
 -- Индексы таблицы `messages`
@@ -98,7 +99,8 @@ ALTER TABLE `messages`
 -- Индексы таблицы `replys`
 --
 ALTER TABLE `replys`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `comment_id` (`comment_id`);
 
 --
 -- Индексы таблицы `users`
@@ -114,22 +116,38 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 --
 -- AUTO_INCREMENT для таблицы `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 --
 -- AUTO_INCREMENT для таблицы `replys`
 --
 ALTER TABLE `replys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`message_id`) REFERENCES `messages` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `replys`
+--
+ALTER TABLE `replys`
+  ADD CONSTRAINT `replys_ibfk_1` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

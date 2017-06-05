@@ -100,7 +100,14 @@ class MessageController
 					$result->rows[$i]['comments']->rows[$j]['replys'] = $reply->getReplys($result->rows[$i]['comments']->rows[$j]['id']);//get reply for message
 				}
 			}
-			$html = getMessageHTML($result, $this->user['id']); //get html for ajax - in helpers.php
+
+			$page_params['messages'] = $result;
+			$page_params['user_id'] = $this->user['id'];
+
+			ob_start();
+				include(HOME_PATH.'/views/partials/message-list.php'); //get html for ajax I used it, because i can change any html in 1 place..
+			$html = ob_get_clean();
+
 			exit(json_encode(['status' => 'success', 'skip' => $result->num_rows, 'html' => $html]));
 		} else {
 			exit(json_encode(['status' => 'error', 'message' => 'Список закончен']));

@@ -113,7 +113,6 @@ jQuery(document).ready(function($) {
 
 		var skipRows = 5; // default skip rows from DB
 		var isEnd = false;
-		var currentUserId = $('#current_user_id').val();
 		var win = $('.message_list');
 
 		var flag = 0; // don't start ajax before end ajax
