@@ -5,8 +5,6 @@ if (window.location.hash == '#_=_'){
 }
 
 jQuery(document).ready(function($) {
-	alert('need fix scroll functions and look on error list');
-
 	/*
 	 * use ajax for delete message
 	 */
@@ -138,10 +136,9 @@ jQuery(document).ready(function($) {
 							success: function(response) {
 								flag = 0;
 								response = $.parseJSON(response); // get object from json
-								if ( response.status == 'success' ) {
-									let messages = $.parseJSON(response.data);
-									skipRows += messages.length; // add to skip from db
-									setScrollMessage(messages, currentUserId); // if status success i add messages
+								if ( response.status == 'success' ) { //also i try build html in js, but it's not readably
+									skipRows += response.skip; // add to skip from db
+									$('#messages').append(response.html); // if status success i add messages
 								} else if ( response.status == 'error' ) {
 									isEnd = true; //set false for not search in DB and don't use ajax
 								}
@@ -152,36 +149,5 @@ jQuery(document).ready(function($) {
 				}
 			}
 		});
-	}
-
-	function setScrollMessage(messages, currentUserId) {
-		var html = '';
-		messages.forEach(function(message) { //each data from DB and generate html for append to list
-			var classAdd = ( message.created_at == message.updated_at ) ? classAdd = 'd-none' : '';
-
-			html += `
-				<div id="message_`+message.id+`">
-					<div class="mb-2">
-						<span>Написано </span>
-						<a href="mailto:`+message.facebook_email+`">`+message.facebook_email+`</a>
-						<span>в `+message.created_at+`</span>
-						<span class="text-muted ${classAdd}" id="message_updated_at_`+message.id+`"> изменено <span>`+message.updated_at+`</span></span>
-						`;
-						if ( message.user_id == currentUserId) { // check if current user can edit this message
-							html += `
-								<div class="float-right">
-									<a href="javascript:void(0)" data-id="`+message.id+`" id="edit_message" class="mr-2" data-toggle="modal" data-target="#modal_edit_message"><img src="/assets/img/edit.png"></a>
-									<a href="javascript:void(0)" data-id="`+message.id+`" id="delete_message"><img src="/assets/img/delete.png"></a>
-								</div>
-							`;
-						}
-						html += `
-					</div>
-					<p class="mark p-2" id="message_text_id_`+message.id+`">`+message.message+`</p>
-					<hr>
-				</div>
-			`;
-		});
-		$('#messages').append(html);
 	}
 });

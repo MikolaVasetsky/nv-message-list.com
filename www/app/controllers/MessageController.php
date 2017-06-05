@@ -89,17 +89,23 @@ class MessageController
 	public function getAjaxMessages()
 	{
 		$result = $this->message->getMessageList($_POST['skip']);
+
 		if ( $result->num_rows > 0 ) {
-			exit(json_encode(['status' => 'success', 'data' => json_encode($result->rows)]));
+			$comment = new Comment;
+			$reply = new Reply;
+			for ( $i = 0; $i < $result->num_rows; ++$i ) {
+				$result->rows[$i]['comments'] = $comment->getComments($result->rows[$i]['id']);//get comment for message
+
+				for ( $j = 0; $j < $result->rows[$i]['comments']->num_rows; ++$j ) {
+					$result->rows[$i]['comments']->rows[$j]['replys'] = $reply->getReplys($result->rows[$i]['comments']->rows[$j]['id']);//get reply for message
+				}
+			}
+			$html = getMessageHTML($result, $this->user['id']); //get html for ajax - in helpers.php
+			exit(json_encode(['status' => 'success', 'skip' => $result->num_rows, 'html' => $html]));
 		} else {
 			exit(json_encode(['status' => 'error', 'message' => 'Список закончен']));
 		}
 	}
-
-
-
-
-
 
 	private static function getFacebookLoginUrl()
 	{
