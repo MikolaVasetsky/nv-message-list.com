@@ -6,20 +6,16 @@ $arr = explode("/", substr($request_uri[0], 1));
 $controller = $arr[0] ?: 'home';
 
 //get method
-if ( isset($arr[1]) ) {
-	$method = $arr[1];
-} else {
-	$method = 'index';
-}
+$method = (isset($arr[1])) ? $arr[1] : 'index';
 
-
-$class = ucfirst(strtolower($controller)).'Controller';
-$file = 'controllers/'.$class.".php";
+$class = ucfirst(strtolower($controller));
+$class_controller = $class.'Controller';
+$file = 'controllers/'.$class_controller.".php";
 
 if ( file_exists(HOME_PATH.'/app/'.$file) ) { // try include file
 	require_once($file);
-	$action = new $class;
-	if ( method_exists($class, $method) ) {
+	$action = new $class_controller;
+	if ( method_exists($class_controller, $method) ) {
 		$page_params = $action->$method();//if method exist -> call to it
 	} else {
 		$page_params = is_not_page();//default 404 page

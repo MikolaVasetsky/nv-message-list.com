@@ -13,6 +13,7 @@ class Message extends Model
 			LIMIT 5
 			OFFSET '.$skip.'
 		');
+		// GROUP_CONCAT
 	}
 
 	public function create($message, $user_id)

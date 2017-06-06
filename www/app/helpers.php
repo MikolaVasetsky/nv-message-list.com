@@ -24,6 +24,7 @@ function vardump($str) {
 }
 
 function is_not_page() {
+	header("HTTP/1.0 404 Not Found");
 	return [
 		'title' => '404-page',
 		'page' => '404-page.php',
