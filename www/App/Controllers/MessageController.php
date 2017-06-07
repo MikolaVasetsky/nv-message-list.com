@@ -1,7 +1,7 @@
 <?php
-require_once(HOME_PATH.'/app/models/Message.php');
-require_once(HOME_PATH.'/app/models/Comment.php');
-require_once(HOME_PATH.'/app/models/Reply.php');
+require_once(HOME_PATH.'/App/Models/Message.php');
+require_once(HOME_PATH.'/App/Models/Comment.php');
+require_once(HOME_PATH.'/App/Models/Reply.php');
 
 /**
 * init front page

@@ -1,5 +1,4 @@
 <?php
-require_once(HOME_PATH.'/app/models/Comment.php');
 
 /**
 * init front page
@@ -11,6 +10,7 @@ class CommentController
 
 	public function __construct()
 	{
+		require_once(HOME_PATH.'/App/Models/Comment.php');
 		$this->comment = new Comment();
 
 		if ( isset($_SESSION['fb_access_token']) ) { //if user has session, we check his ID.

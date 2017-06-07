@@ -1,5 +1,4 @@
 <?php
-require_once(HOME_PATH.'/app/models/User.php');
 class LoginController
 {
 	public function index()
@@ -86,6 +85,7 @@ class LoginController
 		$userNode = $response->getGraphUser();
 		$facebook_email = $userNode->getField('email');
 
+		require_once(HOME_PATH.'/App/Models/User.php');
 		$user = new User();
 		$user->createOrUpdateTokenUser($facebook_id, (string) $accessToken, $facebook_email);
 

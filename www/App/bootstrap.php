@@ -4,6 +4,6 @@ require_once('config.php');
 
 require_once('mysqli.php');
 
-require_once('models/Model.php');
+require_once('Models/Model.php');
 
 require_once('routes.php');

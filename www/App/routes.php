@@ -10,9 +10,9 @@ $method = (isset($arr[1])) ? $arr[1] : 'index';
 
 $class = ucfirst(strtolower($controller));
 $class_controller = $class.'Controller';
-$file = 'controllers/'.$class_controller.".php";
+$file = 'Controllers/'.$class_controller.".php";
 
-if ( file_exists(HOME_PATH.'/app/'.$file) ) { // try include file
+if ( file_exists(HOME_PATH.'/App/'.$file) ) { // try include file
 	require_once($file);
 	$action = new $class_controller;
 	if ( method_exists($class_controller, $method) ) {
